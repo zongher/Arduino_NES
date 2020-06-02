@@ -167,7 +167,7 @@ static int pattern_col = 0;
 static bool gui_fpsupdate = false;
 static int gui_ticks = 0;
 static int gui_fps = 0;
-static int gui_refresh = 60; /* default to 60Hz */
+static int gui_refresh = NES_REFRESH_RATE; /* default to 60Hz */
 
 static int mouse_x, mouse_y, mouse_button;
 
@@ -588,7 +588,6 @@ void gui_setrefresh(int frequency)
 
 int gui_init(void)
 {
-   gui_refresh = 60;
    memset(&msg, 0, sizeof(message_t));
 
    return 0; /* can't fail */

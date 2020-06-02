@@ -8,8 +8,6 @@
 #include "nofrendo.h"
 #include "esp_partition.h"
 
-
-
 char *osd_getromdata() {
 	char* romdata;
 	const esp_partition_t* part;
@@ -24,7 +22,6 @@ char *osd_getromdata() {
     return (char*)romdata;
 }
 
-
 esp_err_t event_handler(void *ctx, system_event_t *event)
 {
     return ESP_OK;
@@ -38,4 +35,3 @@ int app_main(void)
 	asm("break.n 1");
     return 0;
 }
-

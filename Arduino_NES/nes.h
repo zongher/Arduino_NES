@@ -41,6 +41,8 @@
 #define  NES_SCREEN_WIDTH     256
 #define  NES_SCREEN_HEIGHT    240
 
+#define PAL
+
 /* NTSC = 60Hz, PAL = 50Hz */
 #ifdef PAL
 #define  NES_REFRESH_RATE     50

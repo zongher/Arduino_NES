@@ -38,7 +38,6 @@ typedef enum
 
 int nofrendo_main(int argc, char *argv[]);
 
-
 extern volatile int nofrendo_ticks; /* system timer ticks */
 
 /* osd_main should end with a call to main_loop().
