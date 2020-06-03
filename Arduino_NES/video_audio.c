@@ -253,7 +253,6 @@ static void custom_blit(bitmap_t *bmp, int num_dirties, rect_t *dirty_rects)
 	do_audio_frame();
 }
 
-//This runs on core 1.
 static void videoTask(void *arg)
 {
 	int x, y;
@@ -360,7 +359,7 @@ int osd_init()
 	lcd_init();
 	lcd_write_frame(0, 0, 320, 240, NULL);
 	vidQueue = xQueueCreate(1, sizeof(bitmap_t *));
-	xTaskCreatePinnedToCore(&videoTask, "videoTask", 2048, NULL, 5, NULL, 1);
+	xTaskCreatePinnedToCore(&videoTask, "videoTask", 2048, NULL, 0, NULL, 0);
 	osd_initinput();
 	return 0;
 }
