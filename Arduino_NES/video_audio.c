@@ -38,7 +38,9 @@
 #include "stdint.h"
 #include "driver/i2s.h"
 #include "sdkconfig.h"
-#include "spi_lcd.h"
+
+extern void lcd_write_frame(const uint16_t x, const uint16_t y, const uint16_t width, const uint16_t height, const uint8_t *data[]);
+extern void lcd_init();
 
 #if defined CONFIG_HW_CONTROLLER_GPIO
 #include "gpiocontroller.h"
@@ -73,7 +75,8 @@ int osd_installtimer(int frequency, void *func, int funcsize, void *counter, int
 static void (*audio_callback)(void *buffer, int length) = NULL;
 #if CONFIG_SOUND_ENA
 QueueHandle_t queue;
-static int16_t *audio_frame;
+// static int16_t audio_frame[DEFAULT_FRAGSIZE];
+static int16_t audio_frame[2 * DEFAULT_FRAGSIZE];
 #endif
 
 static void do_audio_frame()
@@ -118,8 +121,6 @@ static void osd_stopsound(void)
 static int osd_init_sound(void)
 {
 #if CONFIG_SOUND_ENA
-	// audio_frame = malloc(2 * DEFAULT_FRAGSIZE);
-	audio_frame = malloc(4 * DEFAULT_FRAGSIZE);
 	i2s_config_t cfg = {
 		.mode = I2S_MODE_MASTER | I2S_MODE_TX | I2S_MODE_DAC_BUILT_IN,
 		.sample_rate = DEFAULT_SAMPLERATE,
