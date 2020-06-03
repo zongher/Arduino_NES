@@ -31,45 +31,45 @@
 
 
 //static FILE *errorlog = NULL;
-static int (*log_func)(const char *string) = NULL;
+static int (*nes_log_func)(const char *string) = NULL;
 
-int log_init(void)
+int nes_log_init(void)
 {
    return 0;
 }
 
-void log_shutdown(void)
+void nes_log_shutdown(void)
 {
 }
 
-int log_print(const char *string)
+int nes_log_print(const char *string)
 {
    UNUSED(string);
 
    return 0;
 }
 
-int log_printf(const char *format, ... )
+int nes_log_printf(const char *format, ... )
 {
    UNUSED(format);
 
    return 0; /* should be number of chars written */
 }
 
-void log_chain_logfunc(int (*func)(const char *string))
+void nes_log_chain_logfunc(int (*func)(const char *string))
 {
-   log_func = func;
+   nes_log_func = func;
 }
 
-void log_assert(int expr, int line, const char *file, char *msg)
+void nes_log_assert(int expr, int line, const char *file, char *msg)
 {
    if (expr)
       return;
 
    if (NULL != msg)
-      log_printf("ASSERT: line %d of %s, %s\n", line, file, msg);
+      nes_log_printf("ASSERT: line %d of %s, %s\n", line, file, msg);
    else
-      log_printf("ASSERT: line %d of %s\n", line, file);
+      nes_log_printf("ASSERT: line %d of %s\n", line, file);
 
    asm("break.n 1");
 //   exit(-1);

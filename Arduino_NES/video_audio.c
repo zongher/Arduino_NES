@@ -352,7 +352,7 @@ int osd_init()
 	TaskHandle_t idle_0 = xTaskGetIdleTaskHandleForCPU(0);
 	esp_task_wdt_delete(idle_0);
 
-	log_chain_logfunc(logprint);
+	nes_log_chain_logfunc(logprint);
 
 	if (osd_init_sound())
 		return -1;
