@@ -7,12 +7,15 @@
 #include "driver/gpio.h"
 #include "esp_partition.h"
 
-#include "Arduino_ESP32SPI.h"
+#include "Arduino_ESP32SPI_DMA.h"
 #include "Arduino_Display.h" // Various display driver
 
-#define TFT_BL 14
-Arduino_DataBus *bus = new Arduino_ESP32SPI(21 /* DC */, 5 /* CS */, SCK, MOSI, MISO);
-Arduino_ST7789 *gfx = new Arduino_ST7789(bus, -1 /* RST */, 1 /* rotation */, true /* IPS */);
+ #define TFT_BL 14
+ Arduino_DataBus *bus = new Arduino_ESP32SPI_DMA(21 /* DC */, 5 /* CS */, SCK, MOSI, MISO);
+ Arduino_TFT *gfx = new Arduino_ST7789(bus, -1 /* RST */, 1 /* rotation */, true /* IPS */);
+//#define TFT_BL 14
+//Arduino_DataBus *bus = new Arduino_ESP32SPI_DMA(-1 /* DC */, 5 /* CS */, 18 /* SCK */, 23 /* MOSI */, 19 /* MISO */);
+//Arduino_TFT *gfx = new Arduino_HX8357B(bus, 33 /* RST */, 3 /* rotation */, true /* IPS */);
 
 extern "C"
 {
@@ -20,7 +23,6 @@ extern "C"
 }
 
 extern uint16_t myPalette[];
-uint16_t buf[32];
 
 extern "C" void lcd_write_frame(const uint16_t x, const uint16_t y, const uint16_t width, const uint16_t height, const uint8_t *data[])
 {
@@ -32,31 +34,29 @@ extern "C" void lcd_write_frame(const uint16_t x, const uint16_t y, const uint16
     {
         uint8_t n, l;
         uint16_t i, len;
-        const uint8_t *d;
-        uint16_t *p;
+        int16_t w = gfx->width();
+        int16_t h = gfx->height();
         gfx->startWrite();
-        gfx->writeAddrWindow(x, y, width, height);
-        for (i = 0; i < height; i++)
+        if (w < 480)
         {
-            l = 32;
-            d = data[i];
-            len = width;
-            while (len)
+            gfx->writeAddrWindow(x, y, width, height);
+            for (i = 0; i < height; i++)
             {
-                p = buf;
-                if (len < 32)
-                {
-                    l = len;
-                }
-                n = l;
-                while (n--)
-                {
-                    *(p++) = myPalette[*(d++)];
-                }
-                gfx->writePixels(buf, l);
-                len -= l;
+                gfx->writeIndexedPixels((uint8_t *)(data[i]), myPalette, width);
             }
         }
+        else
+        {
+            for (i = 0; i < 214; i++)
+            {
+                if ((i % 2) == 0)
+                {
+                    gfx->writeAddrWindow(0, (i * 3 / 2), 480, 2);
+                }
+                gfx->writeIndexedPixelsDouble((uint8_t *)(data[i + 10] + 8), myPalette, 240);
+            }
+        }
+
         gfx->endWrite();
     }
 }

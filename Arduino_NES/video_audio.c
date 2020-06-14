@@ -55,7 +55,7 @@ extern void lcd_init();
 #define DEFAULT_SAMPLERATE 32000
 #define DEFAULT_FRAGSIZE 200
 
-#define DEFAULT_WIDTH 256
+#define DEFAULT_WIDTH NES_SCREEN_WIDTH
 #define DEFAULT_HEIGHT NES_VISIBLE_HEIGHT
 
 TimerHandle_t timer;
